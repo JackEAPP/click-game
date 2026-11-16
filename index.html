@@ -1,24 +1,64 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>My First Game</title>
+    <title>Factory Production Tycoon</title>
 </head>
-<body style="text-align:center;font-family:Arial">
 
-    <h1>Click Game</h1>
+<body style="font-family:Arial; text-align:center;">
 
-    <h2>Score: <span id="score">0</span></h2>
+    <h1>🏭 Factory Production Tycoon</h1>
 
-    <button onclick="addPoint()">Click Me!</button>
+    <h2>Cartons Produced: <span id="cartons">0</span></h2>
+
+    <h3>Money: RM <span id="money">0</span></h3>
+
+    <button onclick="produce()">
+        Produce Carton
+    </button>
+
+    <br><br>
+
+    <button onclick="buyMachine()">
+        Buy Machine (RM100)
+    </button>
+
+    <h3>Machines: <span id="machines">1</span></h3>
 
     <script>
-        let score = 0;
 
-        function addPoint() {
-            score++;
-            document.getElementById("score").innerText = score;
+        let cartons = 0;
+        let money = 0;
+        let machines = 1;
+
+        function produce() {
+
+            cartons = cartons + machines;
+            money = money + machines;
+
+            document.getElementById("cartons").innerText = cartons;
+            document.getElementById("money").innerText = money;
         }
+
+        function buyMachine() {
+
+            if (money >= 100) {
+
+                money = money - 100;
+                machines++;
+
+                document.getElementById("money").innerText = money;
+                document.getElementById("machines").innerText = machines;
+
+            } else {
+
+                alert("Not enough money!");
+
+            }
+        }
+
     </script>
 
 </body>
+
 </html>
