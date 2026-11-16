@@ -62,3 +62,13 @@
 </body>
 
 </html>
+
+setInterval(autoProduce, 1000);
+
+function autoProduce() {
+
+    cartons = cartons + machines;
+
+    document.getElementById("cartons").innerText = cartons;
+
+}
