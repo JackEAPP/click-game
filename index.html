@@ -52,8 +52,6 @@
 
 <h2>👷 Workers: <span id="workers">1</span></h2>
 
-<h3>🎯 Daily Target: 1700</h3>
-
 <button class="produce" onclick="produce()">
     Produce Carton
 </button>
@@ -85,11 +83,6 @@ function updateScreen() {
     document.getElementById("money").innerText = money;
     document.getElementById("machines").innerText = machines;
     document.getElementById("workers").innerText = workers;
-
-    if(cartons >= 1700){
-        document.getElementById("status").innerText =
-        "✅ Daily Target Achieved!";
-    }
 
 }
 
