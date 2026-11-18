@@ -1,3 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Factory Production Tycoon</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f0f2f5;
+        }
+
+        .card {
+            background: white;
+            width: 350px;
+            margin: auto;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px lightgray;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .upgrade {
+            background: green;
+            color: white;
+        }
+
+        .produce {
+            background: royalblue;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>🏭 Factory Production Tycoon</h1>
+
+<h2>📦 Cartons: <span id="cartons">0</span></h2>
+
+<h2>💰 Money: RM <span id="money">0</span></h2>
+
+<h2>⚙️ Machines: <span id="machines">1</span></h2>
+
+<h2>👷 Workers: <span id="workers">1</span></h2>
+
+<h3>🎯 Daily Target: 1700</h3>
+
+<button class="produce" onclick="produce()">
+    Produce Carton
+</button>
+
+<br><br>
+
+<button class="upgrade" onclick="buyMachine()">
+    Buy Machine (RM100)
+</button>
+
+<button class="upgrade" onclick="hireWorker()">
+    Hire Worker (RM50)
+</button>
+
+<h3 id="status">Factory Running</h3>
+
+</div>
+
 <script>
 
 let money = 0;
@@ -104,3 +178,6 @@ function unlockLine3(){
 setInterval(autoProduce,1000);
 
 </script>
+
+</body>
+</html>
