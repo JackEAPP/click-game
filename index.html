@@ -52,6 +52,8 @@
 
 <h2>👷 Workers: <span id="workers">1</span></h2>
 
+<h2>📈 Output/sec: <span id="rate">1</span></h2>
+
 <button class="produce" onclick="produce()">
     Produce Carton
 </button>
@@ -83,6 +85,8 @@ function updateScreen() {
     document.getElementById("money").innerText = money;
     document.getElementById("machines").innerText = machines;
     document.getElementById("workers").innerText = workers;
+    document.getElementById("rate").innerText =
+        machines * workers;
 
 }
 
