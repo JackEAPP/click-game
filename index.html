@@ -1,78 +1,157 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Factory Production Tycoon</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f0f2f5;
+        }
+
+        .card {
+            background: white;
+            width: 350px;
+            margin: auto;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px lightgray;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .upgrade {
+            background: green;
+            color: white;
+        }
+
+        .produce {
+            background: royalblue;
+            color: white;
+        }
+    </style>
 </head>
 
-<body style="font-family:Arial; text-align:center;">
+<body>
 
-    <h1>🏭 Factory Production Tycoon</h1>
+<div class="card">
 
-    <h2>Cartons Produced: <span id="cartons">0</span></h2>
+<h1>🏭 Factory Production Tycoon</h1>
 
-    <h3>Money: RM <span id="money">0</span></h3>
+<h2>📦 Cartons: <span id="cartons">0</span></h2>
 
-    <button onclick="produce()">
-        Produce Carton
-    </button>
+<h2>💰 Money: RM <span id="money">0</span></h2>
 
-    <br><br>
+<h2>⚙️ Machines: <span id="machines">1</span></h2>
 
-    <button onclick="buyMachine()">
-        Buy Machine (RM100)
-    </button>
+<h2>👷 Workers: <span id="workers">1</span></h2>
 
-    <h3>Machines: <span id="machines">1</span></h3>
+<h3>🎯 Daily Target: 1700</h3>
 
-    <script>
+<button class="produce" onclick="produce()">
+    Produce Carton
+</button>
 
-        let cartons = 0;
-        let money = 0;
-        let machines = 1;
+<br><br>
 
-        function produce() {
+<button class="upgrade" onclick="buyMachine()">
+    Buy Machine (RM100)
+</button>
 
-            cartons = cartons + machines;
-            money = money + machines;
+<button class="upgrade" onclick="hireWorker()">
+    Hire Worker (RM50)
+</button>
 
-            document.getElementById("cartons").innerText = cartons;
-            document.getElementById("money").innerText = money;
-        }
+<h3 id="status">Factory Running</h3>
 
-        function buyMachine() {
-
-            if (money >= 100) {
-
-                money = money - 100;
-                machines++;
-
-                document.getElementById("money").innerText = money;
-                document.getElementById("machines").innerText = machines;
-
-            } else {
-
-                alert("Not enough money!");
-
-            }
-        }
-
-    </script>
-
-</body>
-
-</html>
+</div>
 
 <script>
-    
-setInterval(autoProduce, 1000);
+
+let cartons = 0;
+let money = 0;
+let machines = 1;
+let workers = 1;
+
+function updateScreen() {
+
+    document.getElementById("cartons").innerText = cartons;
+    document.getElementById("money").innerText = money;
+    document.getElementById("machines").innerText = machines;
+    document.getElementById("workers").innerText = workers;
+
+    if(cartons >= 1700){
+        document.getElementById("status").innerText =
+        "✅ Daily Target Achieved!";
+    }
+
+}
+
+function produce() {
+
+    let output = machines * workers;
+
+    cartons += output;
+    money += output;
+
+    updateScreen();
+
+}
+
+function buyMachine() {
+
+    if(money >= 100){
+
+        money -= 100;
+        machines++;
+
+        updateScreen();
+
+    } else {
+
+        alert("Not enough money!");
+
+    }
+
+}
+
+function hireWorker() {
+
+    if(money >= 50){
+
+        money -= 50;
+        workers++;
+
+        updateScreen();
+
+    } else {
+
+        alert("Not enough money!");
+
+    }
+
+}
 
 function autoProduce() {
 
-    cartons = cartons + machines;
-    money = money + machines;
-    document.getElementById("cartons").innerText = cartons;
-    document.getElementById("money").innerText = money;
+    let output = machines * workers;
+
+    cartons += output;
+    money += output;
+
+    updateScreen();
 
 }
+
+setInterval(autoProduce, 1000);
+
 </script>
+
+</body>
+</html>
