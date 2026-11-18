@@ -1,157 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Factory Production Tycoon</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #f0f2f5;
-        }
-
-        .card {
-            background: white;
-            width: 350px;
-            margin: auto;
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px lightgray;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        .upgrade {
-            background: green;
-            color: white;
-        }
-
-        .produce {
-            background: royalblue;
-            color: white;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>🏭 Factory Production Tycoon</h1>
-
-<h2>📦 Cartons: <span id="cartons">0</span></h2>
-
-<h2>💰 Money: RM <span id="money">0</span></h2>
-
-<h2>⚙️ Machines: <span id="machines">1</span></h2>
-
-<h2>👷 Workers: <span id="workers">1</span></h2>
-
-<h3>🎯 Daily Target: 1700</h3>
-
-<button class="produce" onclick="produce()">
-    Produce Carton
-</button>
-
-<br><br>
-
-<button class="upgrade" onclick="buyMachine()">
-    Buy Machine (RM100)
-</button>
-
-<button class="upgrade" onclick="hireWorker()">
-    Hire Worker (RM50)
-</button>
-
-<h3 id="status">Factory Running</h3>
-
-</div>
-
 <script>
 
-let cartons = 0;
 let money = 0;
-let machines = 1;
-let workers = 1;
+let cartons = 0;
+
+let line1 = 1;
+let line2 = 0;
+let line3 = 0;
 
 function updateScreen() {
 
-    document.getElementById("cartons").innerText = cartons;
-    document.getElementById("money").innerText = money;
-    document.getElementById("machines").innerText = machines;
-    document.getElementById("workers").innerText = workers;
+    document.getElementById("money").innerText = Math.floor(money);
+    document.getElementById("cartons").innerText = Math.floor(cartons);
 
-    if(cartons >= 1700){
-        document.getElementById("status").innerText =
-        "✅ Daily Target Achieved!";
-    }
+    document.getElementById("line1").innerText = line1;
+    document.getElementById("line2").innerText = line2;
+    document.getElementById("line3").innerText = line3;
 
 }
 
 function produce() {
 
-    let output = machines * workers;
+    let output = line1 + line2 + line3;
 
-    cartons += output;
     money += output;
+    cartons += output;
 
     updateScreen();
 
 }
 
-function buyMachine() {
+function autoProduce(){
 
-    if(money >= 100){
+    let output = line1 + line2 + line3;
 
-        money -= 100;
-        machines++;
-
-        updateScreen();
-
-    } else {
-
-        alert("Not enough money!");
-
-    }
-
-}
-
-function hireWorker() {
-
-    if(money >= 50){
-
-        money -= 50;
-        workers++;
-
-        updateScreen();
-
-    } else {
-
-        alert("Not enough money!");
-
-    }
-
-}
-
-function autoProduce() {
-
-    let output = machines * workers;
-
-    cartons += output;
     money += output;
+    cartons += output;
 
     updateScreen();
 
 }
 
-setInterval(autoProduce, 1000);
+function upgradeLine1(){
+
+    let cost = line1 * 20;
+
+    if(money >= cost){
+
+        money -= cost;
+        line1++;
+
+        updateScreen();
+
+    }else{
+
+        alert("Not enough money");
+
+    }
+
+}
+
+function unlockLine2(){
+
+    if(line2 == 0){
+
+        if(money >= 500){
+
+            money -= 500;
+            line2 = 5;
+
+            updateScreen();
+
+        }else{
+
+            alert("Need RM500");
+
+        }
+
+    }
+
+}
+
+function unlockLine3(){
+
+    if(line3 == 0){
+
+        if(money >= 5000){
+
+            money -= 5000;
+            line3 = 20;
+
+            updateScreen();
+
+        }else{
+
+            alert("Need RM5000");
+
+        }
+
+    }
+
+}
+
+setInterval(autoProduce,1000);
 
 </script>
-
-</body>
-</html>
