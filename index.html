@@ -52,7 +52,11 @@
 
 <h2>👷 Workers: <span id="workers">1</span></h2>
 
+<h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
+    
 <h2>📈 Output/sec: <span id="rate">1</span></h2>
+
+<h2>🚚 Sales Rate: <span id="salesrate">5</span>/sec</h2>
 
 <button class="produce" onclick="produce()">
     Produce Carton
@@ -68,6 +72,10 @@
     Hire Worker (RM50)
 </button>
 
+<button class="upgrade" onclick="hireSalesman()">
+    Hire Salesman (RM75)
+</button>
+    
 <h3 id="status">Factory Running</h3>
 
 </div>
@@ -78,6 +86,7 @@ let cartons = 0;
 let money = 0;
 let machines = 1;
 let workers = 1;
+let salesmen = 1;
 
 function updateScreen() {
 
@@ -85,6 +94,7 @@ function updateScreen() {
     document.getElementById("money").innerText = money;
     document.getElementById("machines").innerText = machines;
     document.getElementById("workers").innerText = workers;
+    document.getElementById("salesmen").innerText = salesmen;
     document.getElementById("rate").innerText =
         machines * workers;
 
@@ -133,6 +143,23 @@ function hireWorker() {
 
     }
 
+function hireSalesman() {
+
+    if(money >= 75){
+
+        money -= 75;
+        salesmen++;
+
+        updateScreen();
+
+    } else {
+
+        alert("Not enough money!");
+
+    }
+
+}
+
 }
 
 function autoProduce() {
@@ -140,13 +167,24 @@ function autoProduce() {
     let output = machines * workers;
 
     cartons += output;
-    money += output;
+
+    updateScreen();
+
+}
+
+function autoSell() {
+
+    let sold = Math.min(cartons, salesmen * 5);
+
+    cartons -= sold;
+    money += sold * 2;
 
     updateScreen();
 
 }
 
 setInterval(autoProduce, 1000);
+setInterval(autoSell, 1000);
 
 </script>
 
