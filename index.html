@@ -4,7 +4,6 @@
     <title>Factory Sandbox Tycoon</title>
 
     <style>
-
         body{
             font-family:Arial;
             text-align:center;
@@ -17,16 +16,26 @@
             padding:20px;
             border-radius:10px;
             box-shadow:0 0 10px lightgray;
-            max-width:900px;
+            max-width:1000px;
             margin:auto;
         }
 
         button{
             padding:10px 15px;
             margin:5px;
-            cursor:pointer;
             border:none;
             border-radius:5px;
+            cursor:pointer;
+        }
+
+        .machine{
+            border:1px solid #ccc;
+            background:white;
+            border-radius:8px;
+            padding:10px;
+            margin:10px;
+            width:200px;
+            display:inline-block;
         }
 
         .green{
@@ -39,66 +48,89 @@
             color:white;
         }
 
-        .machine{
-            border:1px solid #ccc;
-            background:white;
-            border-radius:8px;
-            padding:10px;
-            margin:10px;
-            width:180px;
-            display:inline-block;
+        .orange{
+            background:orange;
+            color:white;
         }
-
     </style>
-
 </head>
+
 <body>
 
 <div class="card">
 
-    <h1>🏭 Factory Sandbox Tycoon</h1>
+<h1>🏭 Factory Sandbox Tycoon</h1>
 
-    <h2>📦 Inventory: <span id="cartons">0</span>/<span id="capacity">100</span></h2>
-    
-    <h2>💰 Money: RM <span id="money">100</span></h2>
+<h2>
+📦 Inventory:
+<span id="cartons">0</span> /
+<span id="capacity">100</span>
+</h2>
 
-    <h2>🏬 Warehouse Level:<span id="warehouseLevel">1</span></h2>
+<h2>
+🏬 Warehouse Level:
+<span id="warehouseLevel">1</span>
+</h2>
 
-    <h2>👷 Workers: <span id="workers">1</span></h2>
+<h2>
+💰 Money:
+RM <span id="money">100</span>
+</h2>
 
-    <h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
+<h2>
+👷 Workers:
+<span id="workers">1</span>
+</h2>
 
-    <h2>📈 Production/sec: <span id="prodRate">1</span></h2>
+<h2>
+🧑‍💼 Salesmen:
+<span id="salesmen">1</span>
+</h2>
 
-    <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
+<h2>
+📈 Production/sec:
+<span id="prodRate">1</span>
+</h2>
 
-    <button class="green" onclick="hireWorker()">
-        Hire Worker (RM50)</button>
+<h2>
+🚚 Sales/sec:
+<span id="salesRate">5</span>
+</h2>
 
-    <button class="green" onclick="hireSalesman()">
-        Hire Salesman (RM75)</button>
+<h3 id="status">🏭 Factory Running</h3>
 
-    <button class="blue" onclick="buyMachine()">
-        Buy Machine (RM100)</button>
-    
-    <button class="blue" onclick="upgradeWarehouse()">
-        Upgrade Warehouse</button>
-    
-    <h2>🏭 Machines</h2>
+<button class="green" onclick="hireWorker()">
+Hire Worker (RM50)
+</button>
 
-    <div id="factory"></div>
+<button class="green" onclick="hireSalesman()">
+Hire Salesman (RM75)
+</button>
+
+<button class="blue" onclick="buyMachine()">
+Buy Machine (RM100)
+</button>
+
+<button class="orange" onclick="upgradeWarehouse()">
+Upgrade Warehouse
+</button>
+
+<h2>🏭 Machines</h2>
+
+<div id="factory"></div>
 
 </div>
 
 <script>
 
 let cartons = 0;
-let warehouseCapacity = 100;
-let warehouseLevel = 1;
 let money = 100;
 
 let workers = 1;
 let salesmen = 1;
+
+let warehouseLevel = 1;
+let warehouseCapacity = 100;
 
 let machines = [
     {
@@ -117,27 +149,20 @@ function getProductionRate(){
     });
 
     return total;
+
 }
 
 function updateScreen(){
 
     document.getElementById("cartons").innerText =
         Math.floor(cartons);
-    if(cartons >= warehouseCapacity){
 
-        document.getElementById("status").innerText =
-            "🚨 Warehouse Full!";
-    
-    }else{
-    
-        document.getElementById("status").innerText =
-            "🏭 Factory Running";
-    
-    }
     document.getElementById("capacity").innerText =
         warehouseCapacity;
+
     document.getElementById("warehouseLevel").innerText =
         warehouseLevel;
+
     document.getElementById("money").innerText =
         Math.floor(money);
 
@@ -153,14 +178,26 @@ function updateScreen(){
     document.getElementById("salesRate").innerText =
         salesmen * 5;
 
-    let machineHtml = "";
+    if(cartons >= warehouseCapacity){
+
+        document.getElementById("status").innerText =
+        "🚨 Warehouse Full";
+
+    }else{
+
+        document.getElementById("status").innerText =
+        "🏭 Factory Running";
+
+    }
+
+    let machineHTML = "";
 
     machines.forEach((machine,index)=>{
 
         let upgradeCost = machine.level * 50;
         let sellValue = machine.level * 25;
 
-        machineHtml += `
+        machineHTML += `
 
         <div class="machine">
 
@@ -168,18 +205,29 @@ function updateScreen(){
 
             <p>Level ${machine.level}</p>
 
-            <p>Output: ${machine.level * workers}/sec</p>
+            <p>
+                Output:
+                ${machine.level * workers}/sec
+            </p>
 
             <button onclick="upgradeMachine(${index})">
+
                 ⬆ Upgrade
+
                 <br>
+
                 RM${upgradeCost}
+
             </button>
 
             <button onclick="sellMachine(${index})">
+
                 💰 Sell
+
                 <br>
+
                 RM${sellValue}
+
             </button>
 
         </div>
@@ -189,17 +237,15 @@ function updateScreen(){
     });
 
     document.getElementById("factory").innerHTML =
-        machineHtml;
+        machineHTML;
 
 }
 
 function buyMachine(){
 
-    let cost = 100;
+    if(money >= 100){
 
-    if(money >= cost){
-
-        money -= cost;
+        money -= 100;
 
         machines.push({
             level:1
@@ -209,29 +255,7 @@ function buyMachine(){
 
     }else{
 
-        alert("Not enough money!");
-
-    }
-
-}
-
-function upgradeWarehouse(){
-
-    let cost = warehouseLevel * 200;
-
-    if(money >= cost){
-
-        money -= cost;
-
-        warehouseLevel++;
-
-        warehouseCapacity += 100;
-
-        updateScreen();
-
-    }else{
-
-        alert("Not enough money!");
+        alert("Not enough money");
 
     }
 
@@ -251,7 +275,7 @@ function upgradeMachine(index){
 
     }else{
 
-        alert("Not enough money!");
+        alert("Not enough money");
 
     }
 
@@ -261,7 +285,7 @@ function sellMachine(index){
 
     if(machines.length <= 1){
 
-        alert("Cannot sell last machine!");
+        alert("Cannot sell last machine");
 
         return;
 
@@ -289,7 +313,7 @@ function hireWorker(){
 
     }else{
 
-        alert("Not enough money!");
+        alert("Not enough money");
 
     }
 
@@ -307,7 +331,29 @@ function hireSalesman(){
 
     }else{
 
-        alert("Not enough money!");
+        alert("Not enough money");
+
+    }
+
+}
+
+function upgradeWarehouse(){
+
+    let cost = warehouseLevel * 200;
+
+    if(money >= cost){
+
+        money -= cost;
+
+        warehouseLevel++;
+
+        warehouseCapacity += 100;
+
+        updateScreen();
+
+    }else{
+
+        alert("Not enough money");
 
     }
 
