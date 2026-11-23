@@ -48,13 +48,21 @@
 
 <h2>💰 Money: RM <span id="money">0</span></h2>
 
-<h2>⚙️ Machines: <span id="machines">1</span></h2>
-
 <h2>👷 Workers: <span id="workers">1</span></h2>
 
 <h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
     
 <h2>📈 Output/sec: <span id="rate">1</span></h2>
+
+<h2>🏭 Production Lines</h2>
+
+<div id="factory"></div>
+
+<br>
+
+<button class="upgrade" onclick="buyMachine()">
+    Buy New Machine (RM100)
+</button>
 
 <button class="produce" onclick="produce()">
     Produce Carton
@@ -82,7 +90,9 @@
 
 let cartons = 0;
 let money = 0;
-let machines = 1;
+let machines = [
+    { level: 1 }
+];
 let workers = 1;
 let salesmen = 1;
 
@@ -95,12 +105,42 @@ function updateScreen() {
     document.getElementById("salesmen").innerText = salesmen;
     document.getElementById("rate").innerText =
         machines * workers;
+let html = "";
+
+machines.forEach((machine,index)=>{
+
+    html += `
+    <div style="
+        border:1px solid gray;
+        margin:10px;
+        padding:10px;
+        border-radius:8px;
+        background:white;
+    ">
+
+        🏭 Machine ${index+1}<br>
+
+        Level: ${machine.level}<br><br>
+
+        <button onclick="upgradeMachine(${index})">
+            Upgrade
+        </button>
+
+        <button onclick="sellMachine(${index})">
+            Sell
+        </button>
+
+    </div>
+    `;
+});
+
+document.getElementById("factory").innerHTML = html;
 
 }
 
 function produce() {
 
-    let output = machines * workers;
+    let output = 0;  machines.forEach(machine => {      output += machine.level * workers;  });
 
     cartons += output;
     money += output;
@@ -109,20 +149,40 @@ function produce() {
 
 }
 
-function buyMachine() {
+function upgradeMachine(index){
 
-    if(money >= 100){
+    let cost = machines[index].level * 50;
 
-        money -= 100;
-        machines++;
+    if(money >= cost){
+
+        money -= cost;
+        machines[index].level++;
 
         updateScreen();
 
-    } else {
+    }else{
 
         alert("Not enough money!");
 
     }
+
+}
+
+function sellMachine(index){
+
+    if(machines.length <= 1){
+
+        alert("Cannot sell last machine");
+
+        return;
+
+    }
+
+    money += machines[index].level * 25;
+
+    machines.splice(index,1);
+
+    updateScreen();
 
 }
 
@@ -161,7 +221,7 @@ function hireSalesman() {
 
 function autoProduce() {
 
-    let output = machines * workers;
+    let output = 0;  machines.forEach(machine => {      output += machine.level * workers;  });
 
     cartons += output;
 
