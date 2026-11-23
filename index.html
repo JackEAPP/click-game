@@ -68,8 +68,6 @@
     Produce Carton
 </button>
 
-<br><br>
-
 <button class="upgrade" onclick="hireWorker()">
     Hire Worker (RM50)
 </button>
@@ -101,36 +99,36 @@ function updateScreen() {
     document.getElementById("salesmen").innerText = salesmen;
     document.getElementById("rate").innerText =
         machines * workers;
-let html = "";
-
-machines.forEach((machine,index)=>{
-
-    html += `
-    <div style="
-        border:1px solid gray;
-        margin:10px;
-        padding:10px;
-        border-radius:8px;
-        background:white;
-    ">
-
-        🏭 Machine ${index+1}<br>
-
-        Level: ${machine.level}<br><br>
-
-        <button onclick="upgradeMachine(${index})">
-            Upgrade
-        </button>
-
-        <button onclick="sellMachine(${index})">
-            Sell
-        </button>
-
-    </div>
-    `;
-});
-
-document.getElementById("factory").innerHTML = html;
+    let html = "";
+    
+    machines.forEach((machine,index)=>{
+    
+        html += `
+        <div style="
+            border:1px solid gray;
+            margin:10px;
+            padding:10px;
+            border-radius:8px;
+            background:white;
+        ">
+    
+            🏭 Machine ${index+1}<br>
+    
+            Level: ${machine.level}<br><br>
+    
+            <button onclick="upgradeMachine(${index})">
+                Upgrade
+            </button>
+    
+            <button onclick="sellMachine(${index})">
+                Sell
+            </button>
+    
+        </div>
+        `;
+    });
+    
+    document.getElementById("factory").innerHTML = html;
 
 }
 
