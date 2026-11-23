@@ -1,145 +1,199 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Factory Production Tycoon</title>
+    <title>Factory Sandbox Tycoon</title>
 
     <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #f0f2f5;
+
+        body{
+            font-family:Arial;
+            text-align:center;
+            background:#f5f5f5;
+            margin:20px;
         }
 
-        .card {
-            background: white;
-            width: 350px;
-            margin: auto;
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px lightgray;
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px lightgray;
+            max-width:900px;
+            margin:auto;
         }
 
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
+        button{
+            padding:10px 15px;
+            margin:5px;
+            cursor:pointer;
+            border:none;
+            border-radius:5px;
         }
 
-        .upgrade {
-            background: green;
-            color: white;
+        .green{
+            background:green;
+            color:white;
         }
 
-        .produce {
-            background: royalblue;
-            color: white;
+        .blue{
+            background:royalblue;
+            color:white;
         }
+
+        .machine{
+            border:1px solid #ccc;
+            background:white;
+            border-radius:8px;
+            padding:10px;
+            margin:10px;
+            width:180px;
+            display:inline-block;
+        }
+
     </style>
-</head>
 
+</head>
 <body>
 
 <div class="card">
 
-<h1>🏭 Factory Production Tycoon</h1>
+    <h1>🏭 Factory Sandbox Tycoon</h1>
 
-<h2>📦 Cartons: <span id="cartons">0</span></h2>
+    <h2>📦 Inventory: <span id="cartons">0</span></h2>
 
-<h2>💰 Money: RM <span id="money">0</span></h2>
+    <h2>💰 Money: RM <span id="money">100</span></h2>
 
-<h2>👷 Workers: <span id="workers">1</span></h2>
+    <h2>👷 Workers: <span id="workers">1</span></h2>
 
-<h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
-    
-<h2>📈 Output/sec: <span id="rate">1</span></h2>
+    <h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
 
-<h2>🏭 Production Lines</h2>
+    <h2>📈 Production/sec: <span id="prodRate">1</span></h2>
 
-<div id="factory"></div>
+    <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
 
-<br>
+    <button class="green" onclick="hireWorker()">
+        Hire Worker (RM50)
+    </button>
 
-<button class="upgrade" onclick="buyMachine()">
-    Buy New Machine (RM100)
-</button>
+    <button class="green" onclick="hireSalesman()">
+        Hire Salesman (RM75)
+    </button>
 
-<button class="produce" onclick="produce()">
-    Produce Carton
-</button>
+    <button class="blue" onclick="buyMachine()">
+        Buy Machine (RM100)
+    </button>
 
-<button class="upgrade" onclick="hireWorker()">
-    Hire Worker (RM50)
-</button>
+    <h2>🏭 Machines</h2>
 
-<button class="upgrade" onclick="hireSalesman()">
-    Hire Salesman (RM75)
-</button>
-    
-<h3 id="status">Factory Running</h3>
+    <div id="factory"></div>
 
 </div>
 
 <script>
 
 let cartons = 0;
-let money = 0;
-let machines = [
-    { level: 1 }
-];
+let money = 100;
+
 let workers = 1;
 let salesmen = 1;
 
-function updateScreen() {
+let machines = [
+    {
+        level:1
+    }
+];
 
-    document.getElementById("cartons").innerText = cartons;
-    document.getElementById("money").innerText = money;
-    document.getElementById("machines").innerText = machines;
-    document.getElementById("workers").innerText = workers;
-    document.getElementById("salesmen").innerText = salesmen;
-    document.getElementById("rate").innerText =
-        machines * workers;
-    let html = "";
-    
-    machines.forEach((machine,index)=>{
-    
-        html += `
-        <div style="
-            border:1px solid gray;
-            margin:10px;
-            padding:10px;
-            border-radius:8px;
-            background:white;
-        ">
-    
-            🏭 Machine ${index+1}<br>
-    
-            Level: ${machine.level}<br><br>
-    
-            <button onclick="upgradeMachine(${index})">
-                Upgrade
-            </button>
-    
-            <button onclick="sellMachine(${index})">
-                Sell
-            </button>
-    
-        </div>
-        `;
+function getProductionRate(){
+
+    let total = 0;
+
+    machines.forEach(machine=>{
+
+        total += machine.level * workers;
+
     });
-    
-    document.getElementById("factory").innerHTML = html;
+
+    return total;
+}
+
+function updateScreen(){
+
+    document.getElementById("cartons").innerText =
+        Math.floor(cartons);
+
+    document.getElementById("money").innerText =
+        Math.floor(money);
+
+    document.getElementById("workers").innerText =
+        workers;
+
+    document.getElementById("salesmen").innerText =
+        salesmen;
+
+    document.getElementById("prodRate").innerText =
+        getProductionRate();
+
+    document.getElementById("salesRate").innerText =
+        salesmen * 5;
+
+    let machineHtml = "";
+
+    machines.forEach((machine,index)=>{
+
+        let upgradeCost = machine.level * 50;
+        let sellValue = machine.level * 25;
+
+        machineHtml += `
+
+        <div class="machine">
+
+            <h3>🏭 Machine ${index+1}</h3>
+
+            <p>Level ${machine.level}</p>
+
+            <p>Output: ${machine.level * workers}/sec</p>
+
+            <button onclick="upgradeMachine(${index})">
+                ⬆ Upgrade
+                <br>
+                RM${upgradeCost}
+            </button>
+
+            <button onclick="sellMachine(${index})">
+                💰 Sell
+                <br>
+                RM${sellValue}
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("factory").innerHTML =
+        machineHtml;
 
 }
 
-function produce() {
+function buyMachine(){
 
-    let output = 0;  machines.forEach(machine => {      output += machine.level * workers;  });
+    let cost = 100;
 
-    cartons += output;
-    money += output;
+    if(money >= cost){
 
-    updateScreen();
+        money -= cost;
+
+        machines.push({
+            level:1
+        });
+
+        updateScreen();
+
+    }else{
+
+        alert("Not enough money!");
+
+    }
 
 }
 
@@ -150,6 +204,7 @@ function upgradeMachine(index){
     if(money >= cost){
 
         money -= cost;
+
         machines[index].level++;
 
         updateScreen();
@@ -166,13 +221,15 @@ function sellMachine(index){
 
     if(machines.length <= 1){
 
-        alert("Cannot sell last machine");
+        alert("Cannot sell last machine!");
 
         return;
 
     }
 
-    money += machines[index].level * 25;
+    let value = machines[index].level * 25;
+
+    money += value;
 
     machines.splice(index,1);
 
@@ -180,32 +237,35 @@ function sellMachine(index){
 
 }
 
-function hireWorker() {
+function hireWorker(){
 
     if(money >= 50){
 
         money -= 50;
+
         workers++;
 
         updateScreen();
 
-    } else {
+    }else{
 
         alert("Not enough money!");
 
     }
+
 }
 
-function hireSalesman() {
+function hireSalesman(){
 
     if(money >= 75){
 
         money -= 75;
+
         salesmen++;
 
         updateScreen();
 
-    } else {
+    }else{
 
         alert("Not enough money!");
 
@@ -213,29 +273,34 @@ function hireSalesman() {
 
 }
 
-function autoProduce() {
+function autoProduce(){
 
-    let output = 0;  machines.forEach(machine => {      output += machine.level * workers;  });
-
-    cartons += output;
+    cartons += getProductionRate();
 
     updateScreen();
 
 }
 
-function autoSell() {
+function autoSell(){
 
-    let sold = Math.min(cartons, salesmen * 5);
+    let sold = Math.min(
+        cartons,
+        salesmen * 5
+    );
 
     cartons -= sold;
+
     money += sold * 2;
 
     updateScreen();
 
 }
 
-setInterval(autoProduce, 1000);
-setInterval(autoSell, 1000);
+setInterval(autoProduce,1000);
+
+setInterval(autoSell,1000);
+
+updateScreen();
 
 </script>
 
