@@ -16,12 +16,12 @@
             padding:20px;
             border-radius:10px;
             box-shadow:0 0 10px lightgray;
-            max-width:1000px;
+            max-width:1200px;
             margin:auto;
         }
 
         button{
-            padding:10px 15px;
+            padding:10px;
             margin:5px;
             border:none;
             border-radius:5px;
@@ -34,8 +34,9 @@
             border-radius:8px;
             padding:10px;
             margin:10px;
-            width:200px;
+            width:220px;
             display:inline-block;
+            vertical-align:top;
         }
 
         .green{
@@ -59,78 +60,109 @@
 
 <div class="card">
 
-<h1>🏭 Factory Sandbox Tycoon</h1>
+    <h1>🏭 Factory Sandbox Tycoon</h1>
 
-<h2>
-📦 Inventory:
-<span id="cartons">0</span> /
-<span id="capacity">100</span>
-</h2>
+    <h2>💰 Money: RM <span id="money">100</span></h2>
 
-<h2>
-🏬 Warehouse Level:
-<span id="warehouseLevel">1</span>
-</h2>
+    <h2>
+        📦 Inventory:
+        <span id="cartons">0</span>
+        /
+        <span id="capacity">100</span>
+    </h2>
 
-<h2>
-💰 Money:
-RM <span id="money">100</span>
-</h2>
+    <h2>
+        🏬 Warehouse Level:
+        <span id="warehouseLevel">1</span>
+    </h2>
 
-<h2>
-👷 Workers:
-<span id="workers">1</span>
-</h2>
+    <hr>
 
-<h2>
-🧑‍💼 Salesmen:
-<span id="salesmen">1</span>
-</h2>
+    <h2>🛢️ Palm Oil: <span id="palmOil">100</span></h2>
 
-<h2>
-📈 Production/sec:
-<span id="prodRate">1</span>
-</h2>
+    <h2>🎞️ Packaging Film: <span id="film">100</span></h2>
 
-<h2>
-🚚 Sales/sec:
-<span id="salesRate">5</span>
-</h2>
+    <h2>📦 Empty Cartons: <span id="emptyCartons">100</span></h2>
 
-<h3 id="status">🏭 Factory Running</h3>
+    <hr>
 
-<button class="green" onclick="hireWorker()">
-Hire Worker (RM50)
-</button>
+    <h2>👷 Workers: <span id="workers">1</span></h2>
 
-<button class="green" onclick="hireSalesman()">
-Hire Salesman (RM75)
-</button>
+    <h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
 
-<button class="blue" onclick="buyMachine()">
-Buy Machine (RM100)
-</button>
+    <h2>📈 Production/sec: <span id="prodRate">1</span></h2>
 
-<button class="orange" onclick="upgradeWarehouse()">
-Upgrade Warehouse
-</button>
+    <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
 
-<h2>🏭 Machines</h2>
+    <h2 id="status">🏭 Factory Running</h2>
 
-<div id="factory"></div>
+    <hr>
+
+    <button class="green" onclick="hireWorker()">
+        Hire Worker
+        <br>
+        RM50
+    </button>
+
+    <button class="green" onclick="hireSalesman()">
+        Hire Salesman
+        <br>
+        RM75
+    </button>
+
+    <button class="blue" onclick="buyMachine()">
+        Buy Machine
+        <br>
+        RM100
+    </button>
+
+    <button class="orange" onclick="upgradeWarehouse()">
+        Upgrade Warehouse
+    </button>
+
+    <hr>
+
+    <button onclick="buyPalmOil()">
+        Buy Palm Oil
+        <br>
+        RM50
+    </button>
+
+    <button onclick="buyFilm()">
+        Buy Film
+        <br>
+        RM40
+    </button>
+
+    <button onclick="buyEmptyCartons()">
+        Buy Cartons
+        <br>
+        RM30
+    </button>
+
+    <hr>
+
+    <h2>🏭 Machines</h2>
+
+    <div id="factory"></div>
 
 </div>
 
 <script>
 
-let cartons = 0;
 let money = 100;
+
+let cartons = 0;
 
 let workers = 1;
 let salesmen = 1;
 
 let warehouseLevel = 1;
 let warehouseCapacity = 100;
+
+let palmOil = 100;
+let film = 100;
+let emptyCartons = 100;
 
 let machines = [
     {
@@ -142,7 +174,7 @@ function getProductionRate(){
 
     let total = 0;
 
-    machines.forEach(machine=>{
+    machines.forEach(machine => {
 
         total += machine.level * workers;
 
@@ -154,6 +186,9 @@ function getProductionRate(){
 
 function updateScreen(){
 
+    document.getElementById("money").innerText =
+        Math.floor(money);
+
     document.getElementById("cartons").innerText =
         Math.floor(cartons);
 
@@ -163,14 +198,20 @@ function updateScreen(){
     document.getElementById("warehouseLevel").innerText =
         warehouseLevel;
 
-    document.getElementById("money").innerText =
-        Math.floor(money);
-
     document.getElementById("workers").innerText =
         workers;
 
     document.getElementById("salesmen").innerText =
         salesmen;
+
+    document.getElementById("palmOil").innerText =
+        Math.floor(palmOil);
+
+    document.getElementById("film").innerText =
+        Math.floor(film);
+
+    document.getElementById("emptyCartons").innerText =
+        Math.floor(emptyCartons);
 
     document.getElementById("prodRate").innerText =
         getProductionRate();
@@ -178,24 +219,32 @@ function updateScreen(){
     document.getElementById("salesRate").innerText =
         salesmen * 5;
 
-    if(cartons >= warehouseCapacity){
-
+    if(
+        palmOil <= 0 ||
+        film <= 0 ||
+        emptyCartons <= 0
+    ){
+        document.getElementById("status").innerText =
+        "⚠️ Raw Material Shortage";
+    }
+    else if(cartons >= warehouseCapacity){
         document.getElementById("status").innerText =
         "🚨 Warehouse Full";
-
-    }else{
-
+    }
+    else{
         document.getElementById("status").innerText =
         "🏭 Factory Running";
-
     }
 
     let machineHTML = "";
 
     machines.forEach((machine,index)=>{
 
-        let upgradeCost = machine.level * 50;
-        let sellValue = machine.level * 25;
+        let upgradeCost =
+            machine.level * 50;
+
+        let sellValue =
+            machine.level * 25;
 
         machineHTML += `
 
@@ -211,23 +260,15 @@ function updateScreen(){
             </p>
 
             <button onclick="upgradeMachine(${index})">
-
                 ⬆ Upgrade
-
                 <br>
-
                 RM${upgradeCost}
-
             </button>
 
             <button onclick="sellMachine(${index})">
-
                 💰 Sell
-
                 <br>
-
                 RM${sellValue}
-
             </button>
 
         </div>
@@ -254,9 +295,7 @@ function buyMachine(){
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
@@ -274,9 +313,7 @@ function upgradeMachine(index){
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
@@ -288,7 +325,6 @@ function sellMachine(index){
         alert("Cannot sell last machine");
 
         return;
-
     }
 
     let value = machines[index].level * 25;
@@ -312,9 +348,7 @@ function hireWorker(){
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
@@ -330,9 +364,7 @@ function hireSalesman(){
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
@@ -352,24 +384,88 @@ function upgradeWarehouse(){
         updateScreen();
 
     }else{
-
         alert("Not enough money");
+    }
 
+}
+
+function buyPalmOil(){
+
+    if(money >= 50){
+
+        money -= 50;
+
+        palmOil += 100;
+
+        updateScreen();
+
+    }else{
+        alert("Not enough money");
+    }
+
+}
+
+function buyFilm(){
+
+    if(money >= 40){
+
+        money -= 40;
+
+        film += 100;
+
+        updateScreen();
+
+    }else{
+        alert("Not enough money");
+    }
+
+}
+
+function buyEmptyCartons(){
+
+    if(money >= 30){
+
+        money -= 30;
+
+        emptyCartons += 100;
+
+        updateScreen();
+
+    }else{
+        alert("Not enough money");
     }
 
 }
 
 function autoProduce(){
 
-    let production = getProductionRate();
+    let production =
+        getProductionRate();
 
     let availableSpace =
         warehouseCapacity - cartons;
 
+    let materialLimit =
+        Math.min(
+            palmOil,
+            film,
+            emptyCartons
+        );
+
     let actualProduction =
-        Math.min(production, availableSpace);
+        Math.min(
+            production,
+            availableSpace,
+            materialLimit
+        );
+
+    if(actualProduction <= 0) return;
 
     cartons += actualProduction;
+
+    palmOil -= actualProduction;
+    film -= actualProduction;
+    emptyCartons -= actualProduction;
 
     updateScreen();
 
@@ -377,21 +473,21 @@ function autoProduce(){
 
 function autoSell(){
 
-    let sold = Math.min(
-        cartons,
-        salesmen * 5
-    );
+    let sold =
+        Math.min(
+            cartons,
+            salesmen * 5
+        );
 
     cartons -= sold;
 
-    money += sold * 2;
+    money += sold * 5;
 
     updateScreen();
 
 }
 
 setInterval(autoProduce,1000);
-
 setInterval(autoSell,1000);
 
 updateScreen();
