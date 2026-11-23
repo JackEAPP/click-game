@@ -58,9 +58,11 @@
 
     <h1>🏭 Factory Sandbox Tycoon</h1>
 
-    <h2>📦 Inventory: <span id="cartons">0</span></h2>
-
+    <h2>📦 Inventory: <span id="cartons">0</span>/<span id="capacity">100</span></h2>
+    
     <h2>💰 Money: RM <span id="money">100</span></h2>
+
+    <h2>🏬 Warehouse Level:<span id="warehouseLevel">1</span></h2>
 
     <h2>👷 Workers: <span id="workers">1</span></h2>
 
@@ -71,17 +73,17 @@
     <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
 
     <button class="green" onclick="hireWorker()">
-        Hire Worker (RM50)
-    </button>
+        Hire Worker (RM50)</button>
 
     <button class="green" onclick="hireSalesman()">
-        Hire Salesman (RM75)
-    </button>
+        Hire Salesman (RM75)</button>
 
     <button class="blue" onclick="buyMachine()">
-        Buy Machine (RM100)
-    </button>
-
+        Buy Machine (RM100)</button>
+    
+    <button class="blue" onclick="upgradeWarehouse()">
+        Upgrade Warehouse</button>
+    
     <h2>🏭 Machines</h2>
 
     <div id="factory"></div>
@@ -91,6 +93,8 @@
 <script>
 
 let cartons = 0;
+let warehouseCapacity = 100;
+let warehouseLevel = 1;
 let money = 100;
 
 let workers = 1;
@@ -119,7 +123,21 @@ function updateScreen(){
 
     document.getElementById("cartons").innerText =
         Math.floor(cartons);
+    if(cartons >= warehouseCapacity){
 
+        document.getElementById("status").innerText =
+            "🚨 Warehouse Full!";
+    
+    }else{
+    
+        document.getElementById("status").innerText =
+            "🏭 Factory Running";
+    
+    }
+    document.getElementById("capacity").innerText =
+        warehouseCapacity;
+    document.getElementById("warehouseLevel").innerText =
+        warehouseLevel;
     document.getElementById("money").innerText =
         Math.floor(money);
 
@@ -186,6 +204,28 @@ function buyMachine(){
         machines.push({
             level:1
         });
+
+        updateScreen();
+
+    }else{
+
+        alert("Not enough money!");
+
+    }
+
+}
+
+function upgradeWarehouse(){
+
+    let cost = warehouseLevel * 200;
+
+    if(money >= cost){
+
+        money -= cost;
+
+        warehouseLevel++;
+
+        warehouseCapacity += 100;
 
         updateScreen();
 
@@ -275,7 +315,15 @@ function hireSalesman(){
 
 function autoProduce(){
 
-    cartons += getProductionRate();
+    let production = getProductionRate();
+
+    let availableSpace =
+        warehouseCapacity - cartons;
+
+    let actualProduction =
+        Math.min(production, availableSpace);
+
+    cartons += actualProduction;
 
     updateScreen();
 
