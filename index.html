@@ -159,9 +159,9 @@ let money = 100;
 let cartons = 0;
 
 let workers = 1;
-let workerSalary = 2;
-
 let salesmen = 1;
+    
+let workerSalary = 2;
 let salesmanSalary = 5;
     
 let warehouseLevel = 1;
@@ -234,24 +234,17 @@ function updateScreen(){
         document.getElementById("status").innerText =
         "⚠️ Raw Material Shortage";
     }
-    else if(cartons >= warehouseCapacity){
-        document.getElementById("status").innerText =
-        "🚨 Warehouse Full";
-    }
-    else{
-        document.getElementById("status").innerText =
-        "🏭 Factory Running";
-    }
+    else if(cartons >= warehouseCapacity){document.getElementById("status").innerText ="🚨 Warehouse Full";}
+    else if(money <= 0){document.getElementById("status").innerText ="💸 Cash Flow Crisis";}
+    else{document.getElementById("status").innerText ="🏭 Factory Running";}
 
     let machineHTML = "";
 
     machines.forEach((machine,index)=>{
 
-        let upgradeCost =
-            machine.level * 50;
+        let upgradeCost =machine.level * 50;
 
-        let sellValue =
-            machine.level * 25;
+        let sellValue =machine.level * 25;
 
         machineHTML += `
 
@@ -289,7 +282,11 @@ function updateScreen(){
     document.getElementById("runningCost").innerText =
     getRunningCost();
 
-        let revenuePerSec = salesmen * 5 * 5;
+        let potentialSalesPerSec =
+            salesmen * 5;
+
+        let revenuePerSec =
+            Math.min(cartons, potentialSalesPerSec) * 5;
 
         let profit =
             revenuePerSec - getRunningCost();
@@ -299,32 +296,21 @@ function updateScreen(){
 
 }
 
-function getRunningCost(){
-
-    return (
-        (workers * workerSalary) +
-        (salesmen * salesmanSalary)
-    ) * 10;
-
+function getRunningCost() {
+    return workers * workerSalary +
+           salesmen * salesmanSalary;
 }
 
-function payExpenses(){
+function payExpenses() {
+    money -= getRunningCost();
 
-    let cost = getRunningCost() * 10;
-
-    money -= cost;
-
-    if(money < 0){
-
+    if (money < 0) {
         money = 0;
-
         document.getElementById("status").innerText =
-        "💸 Cash Flow Crisis";
-
+            "💸 Cash Flow Crisis";
     }
 
     updateScreen();
-
 }
     
 function buyMachine(){
@@ -534,7 +520,7 @@ function autoSell(){
 
 setInterval(autoProduce,1000);
 setInterval(autoSell,1000);
-setInterval(payExpenses,10000);
+setInterval(payExpenses,1000);
 
 updateScreen();
 
