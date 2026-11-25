@@ -382,38 +382,36 @@ function sellMachine(index){
 
 function hireWorker(){
 
-    if(money >= cost){
+    if(money >= 50){
 
-        money -= cost;
+        money -= 50;
+
         workers++;
 
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
 
 function hireSalesman(){
 
-    if(money >= cost){
+    if(money >= 75){
 
-        money -= cost;
+        money -= 75;
+
         salesmen++;
 
         updateScreen();
 
     }else{
-
         alert("Not enough money");
-
     }
 
 }
-
+    
 function upgradeWarehouse(){
 
     let cost = warehouseLevel * 200;
