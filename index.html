@@ -301,14 +301,16 @@ function updateScreen(){
 
 function getRunningCost(){
 
-    return (workers * workerSalary) +
-           (salesmen * salesmanSalary);
+    return (
+        (workers * workerSalary) +
+        (salesmen * salesmanSalary)
+    ) * 10;
 
 }
 
 function payExpenses(){
 
-    let cost = getRunningCost();
+    let cost = getRunningCost() * 10;
 
     money -= cost;
 
@@ -532,7 +534,7 @@ function autoSell(){
 
 setInterval(autoProduce,1000);
 setInterval(autoSell,1000);
-setInterval(payExpenses,1000);
+setInterval(payExpenses,10000);
 
 updateScreen();
 
