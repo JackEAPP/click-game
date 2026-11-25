@@ -40,6 +40,8 @@
 
     <h2>🧑‍💼 Salesmen: <span id="salesmen">1</span></h2>
 
+    <h2>🛒 Procurement Officers: <span id="procurementOfficers">0</span></h2>
+
     <h2>📈 Production/sec: <span id="prodRate">1</span></h2>
 
     <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
@@ -55,6 +57,8 @@
     <button class="green" onclick="hireWorker()">Hire Worker<br>RM50</button>
 
     <button class="green" onclick="hireSalesman()">Hire Salesman<br>RM75</button>
+
+    <button class="green" onclick="hireProcurementOfficer()">Hire Procurement Officer<br>RM100</button>
 
     <button class="blue" onclick="buyMachine()">Buy Machine<br>RM100</button>
 
@@ -96,9 +100,11 @@ let cartons = 0;
 
 let workers = 1;
 let salesmen = 1;
+let procurementOfficers = 0;
     
 let workerSalary = 2;
 let salesmanSalary = 5;
+let procurementSalary = 2;
     
 let warehouseLevel = 1;
 let warehouseCapacity = 100;
@@ -146,6 +152,9 @@ function updateScreen(){
 
     document.getElementById("salesmen").innerText =
         salesmen;
+
+    document.getElementById("procurementOfficers").innerText =
+        procurementOfficers;
 
     document.getElementById("palmOil").innerText =
         Math.floor(palmOil);
@@ -234,7 +243,8 @@ function updateScreen(){
 
 function getRunningCost() {
     return workers * workerSalary +
-           salesmen * salesmanSalary;
+           salesmen * salesmanSalary +
+           procurementOfficers * procurementSalary;
 }
 
 function payExpenses() {
@@ -335,6 +345,22 @@ function hireSalesman(){
     }
 
 }
+
+function hireProcurementOfficer(){
+
+    if(money >= 100){
+
+        money -= 100;
+
+        procurementOfficers++;
+
+        updateScreen();
+
+    }else{
+        alert("Not enough money");
+    }
+
+}
     
 function upgradeWarehouse(){
 
@@ -404,6 +430,37 @@ function buyEmptyCartons(){
 
 }
 
+function autoProcure(){
+
+    if(procurementOfficers <= 0) return;
+
+    const reorderThreshold = 20;
+    let purchasedMaterials = false;
+
+    if(palmOil <= reorderThreshold && money >= 50){
+        money -= 50;
+        palmOil += 100;
+        purchasedMaterials = true;
+    }
+
+    if(film <= reorderThreshold && money >= 40){
+        money -= 40;
+        film += 100;
+        purchasedMaterials = true;
+    }
+
+    if(emptyCartons <= reorderThreshold && money >= 30){
+        money -= 30;
+        emptyCartons += 100;
+        purchasedMaterials = true;
+    }
+
+    if(purchasedMaterials){
+        updateScreen();
+    }
+
+}
+
 function autoProduce(){
 
     let production =
@@ -456,6 +513,7 @@ function autoSell(){
 
 setInterval(autoProduce,1000);
 setInterval(autoSell,1000);
+setInterval(autoProcure,1000);
 setInterval(payExpenses,1000);
 
 updateScreen();
