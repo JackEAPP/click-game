@@ -94,6 +94,10 @@
 
     <h2>🚚 Sales/sec: <span id="salesRate">5</span></h2>
 
+    <h2>💸 Running Cost/sec:RM <span id="runningCost">7</span></h2>
+
+    <h2>📊 Profit/sec:RM <span id="profit">0</span></h2>
+    
     <h2 id="status">🏭 Factory Running</h2>
 
     <hr>
@@ -155,8 +159,11 @@ let money = 100;
 let cartons = 0;
 
 let workers = 1;
-let salesmen = 1;
+let workerSalary = 2;
 
+let salesmen = 1;
+let salesmanSalary = 5;
+    
 let warehouseLevel = 1;
 let warehouseCapacity = 100;
 
@@ -279,9 +286,45 @@ function updateScreen(){
 
     document.getElementById("factory").innerHTML =
         machineHTML;
+    document.getElementById("runningCost").innerText =
+    getRunningCost();
+
+        let revenuePerSec = salesmen * 5 * 5;
+
+        let profit =
+            revenuePerSec - getRunningCost();
+
+    document.getElementById("profit").innerText =
+        profit;
 
 }
 
+function getRunningCost(){
+
+    return (workers * workerSalary) +
+           (salesmen * salesmanSalary);
+
+}
+
+function payExpenses(){
+
+    let cost = getRunningCost();
+
+    money -= cost;
+
+    if(money < 0){
+
+        money = 0;
+
+        document.getElementById("status").innerText =
+        "💸 Cash Flow Crisis";
+
+    }
+
+    updateScreen();
+
+}
+    
 function buyMachine(){
 
     if(money >= 100){
@@ -339,32 +382,38 @@ function sellMachine(index){
 
 function hireWorker(){
 
-    if(money >= 50){
+    let cost = workers * 50;
 
-        money -= 50;
+    if(money >= cost){
 
+        money -= cost;
         workers++;
 
         updateScreen();
 
     }else{
+
         alert("Not enough money");
+
     }
 
 }
 
 function hireSalesman(){
 
-    if(money >= 75){
+    let cost = salesmen * 75;
 
-        money -= 75;
+    if(money >= cost){
 
+        money -= cost;
         salesmen++;
 
         updateScreen();
 
     }else{
+
         alert("Not enough money");
+
     }
 
 }
@@ -489,6 +538,7 @@ function autoSell(){
 
 setInterval(autoProduce,1000);
 setInterval(autoSell,1000);
+setInterval(payExpenses,1000);
 
 updateScreen();
 
